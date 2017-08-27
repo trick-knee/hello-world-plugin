@@ -91,8 +91,8 @@
   </distributionManagement>
 
   <properties>
-    <jenkins.version>1.580.1</jenkins.version>
-    <java.level>6</java.level>
+    <jenkins.version>2.63</jenkins.version>
+    <java.level>8</java.level>
   </properties>
 
 </project>
