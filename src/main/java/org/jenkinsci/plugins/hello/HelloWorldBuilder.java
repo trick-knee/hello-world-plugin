@@ -20,6 +20,7 @@ import hudson.util.FormValidation;
 import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -43,16 +44,38 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
 
     private final String name;
 
+    public final String getFoo() {
+        return foo;
+    }
+
+    @DataBoundSetter
+    public void setFoo(final String newFoo) {
+        this.foo = newFoo;
+    }
+    private String foo;
+
     /**
      * This annotation tells Jenkins to call this constructor, with values from
      * the configuration form page with matching parameter names.
      *
      * @param name name to be greeted in the console log
+     * @param foo bar
      */
     @DataBoundConstructor
-    public HelloWorldBuilder(String name) {
+    public HelloWorldBuilder(String name, String foo) {
         this.name = name;
+        this.foo = foo;
     }
+
+//    /**
+//     * asdfadsf
+//     * @param name thename
+//     */
+//    @DataBoundConstructor
+//    public HelloWorldBuilder(String name) {
+//        this.name = name;
+//        this.foo = "default value";
+//    }
 
     /**
      * We'll use this from the <tt>config.jelly</tt>.
@@ -64,7 +87,10 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
     }
 
     @Override
-    public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
+    public void perform(Run<?, ?> run,
+                        FilePath workspace,
+                        Launcher launcher,
+                        TaskListener listener) throws InterruptedException, IOException {
         // this is where you 'build' the project
         // since this is a dummy, we just say 'hello world' and call that a build
 
@@ -74,6 +100,7 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
         } else {
             listener.getLogger().println("Hello, " + name + "!");
         }
+        listener.getLogger().println("the foo is '" + foo + "'.");
     }
 
     /**
@@ -108,6 +135,10 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
     @Symbol("helloWorld")
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
+        public boolean isUseFrench() {
+            return useFrench;
+        }
+
         /**
          * To persist global configuration information, simply store it in a
          * field and call save().
@@ -116,6 +147,11 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
          * If you don't want fields to be persisted, use <tt>transient</tt>.
          */
         private boolean useFrench;
+
+//        @DataBoundSetter
+//        public void setUseFrench(final boolean isFrench) {
+//            this.useFrench = isFrench;
+//        }
 
         public DescriptorImpl() {
             load();
